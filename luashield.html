@@ -405,37 +405,66 @@ textarea.code-input::placeholder { color: var(--muted); }
       </div>
     </div>
 
-    <!-- ── PROFILE ── -->
-    <div class="page" id="page-profile">
-      <div class="profile-container">
-        <div class="page-h1" style="margin-bottom:20px;">Profile</div>
-        <div class="profile-header">
-          <div class="profile-avatar" id="profileAvatar" onclick="document.getElementById('pfpModal').classList.add('open')">
-            <span id="profileAvatarText">?</span>
-            <div class="edit-badge">✎</div>
-          </div>
-          <div>
-            <div style="font-size:20px;font-weight:800;" id="profileName">Anonymous</div>
-            <div style="font-size:12px;color:var(--muted2);" id="profilePlan">FREE PLAN</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="profileUsage">0 / 100 uses</div>
-          </div>
-        </div>
-        <div class="dash-panel">
-          <h3 style="margin-bottom:12px;">Account Settings</h3>
-          <div class="modal-field"><div class="modal-label">USERNAME</div><input class="modal-input" id="profileUsername" placeholder="Enter username..." type="text"></div>
-          <div class="modal-field"><div class="modal-label">NEW PASSWORD</div><input class="modal-input" id="profilePassword" placeholder="Leave empty to keep" type="password"></div>
-          <button class="btn-save" id="saveProfile" style="width:100%;padding:9px;">Save Changes</button>
-        </div>
-        <div class="dash-panel">
-          <h3 style="margin-bottom:12px;">Usage Stats</h3>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-            <div class="stat-card blue"><div class="stat-label">USES TODAY</div><div class="stat-value" id="usesToday">0</div></div>
-            <div class="stat-card green"><div class="stat-label">TOTAL USES</div><div class="stat-value" id="usesTotal">0</div></div>
-            <div class="stat-card purple"><div class="stat-label">LIMIT</div><div class="stat-value" id="usesLimit">100</div></div>
-          </div>
-        </div>
+<!-- ── PROFILE ── -->
+<div class="page" id="page-profile">
+  <div class="profile-container">
+    <div class="page-h1" style="margin-bottom:20px;">Profile</div>
+    
+    <!-- Avatar y nombre -->
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar" onclick="document.getElementById('pfpModal').classList.add('open')">
+        <span id="profileAvatarText">?</span>
+        <div class="edit-badge">✎</div>
+      </div>
+      <div>
+        <div style="font-size:20px;font-weight:800;" id="profileName">Anonymous</div>
+        <div style="font-size:12px;color:var(--muted2);" id="profilePlan">FREE USER · PREMIUM COMING SOON</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="profileUsage">0 / 100 uses</div>
       </div>
     </div>
+
+    <!-- Account Settings + Change Password (combinado) -->
+    <div class="dash-panel">
+      <h3 style="margin-bottom:12px;">Account Settings</h3>
+      <div class="modal-field"><div class="modal-label">USERNAME</div><input class="modal-input" id="profileUsername" placeholder="Enter username..." type="text"></div>
+      <div class="modal-field"><div class="modal-label">CURRENT PASSWORD (required to change)</div><input class="modal-input" id="profilePassword" placeholder="Current password..." type="password"></div>
+      <div class="modal-field"><div class="modal-label">NEW PASSWORD (leave empty to keep)</div><input class="modal-input" id="profileNewPass" placeholder="Min 4 characters..." type="password"></div>
+      <button class="btn-save" id="saveProfile" style="width:100%;padding:9px;">Save Changes</button>
+    </div>
+
+    <!-- Planes -->
+    <div class="dash-panel">
+      <h3 style="margin-bottom:12px;">Plans</h3>
+      <div style="display:flex;gap:12px;">
+        <div style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-weight:800;">FREE</div>
+          <div style="font-size:11px;color:var(--muted);">100 uses</div>
+        </div>
+        <div style="flex:1;background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:12px;text-align:center;opacity:0.6;">
+          <div style="font-weight:800;color:var(--accent);">PREMIUM</div>
+          <div style="font-size:11px;color:var(--muted);">Coming Soon</div>
+        </div>
+        <div style="flex:1;background:var(--surface2);border:1px solid var(--accent2);border-radius:8px;padding:12px;text-align:center;opacity:0.6;">
+          <div style="font-weight:800;color:var(--accent2);">UNLIMITED</div>
+          <div style="font-size:11px;color:var(--muted);">Coming Soon</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="btn-save" style="width:auto;padding:6px 16px;opacity:0.5;cursor:not-allowed;font-size:11px;" disabled>Pay with PayPal — Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-panel">
+      <h3 style="margin-bottom:12px;">Usage Stats</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div class="stat-card blue"><div class="stat-label">USES TODAY</div><div class="stat-value" id="usesToday">0</div></div>
+        <div class="stat-card green"><div class="stat-label">TOTAL USES</div><div class="stat-value" id="usesTotal">0</div></div>
+        <div class="stat-card purple"><div class="stat-label">LIMIT</div><div class="stat-value" id="usesLimit">100</div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- ── SAVED SCRIPTS ── -->
     <div class="page" id="page-saved">
@@ -470,27 +499,34 @@ textarea.code-input::placeholder { color: var(--muted); }
 </div><!-- /main -->
 
 <!-- MODALS -->
-<div class="modal-overlay" id="saveModal">
-  <div class="modal">
-    <div class="modal-title">Save Script</div>
-    <div class="modal-sub">Give your script a name to save it.</div>
-    <div class="modal-field"><div class="modal-label">NAME</div><input class="modal-input" id="scriptNameInput" placeholder="My Secret Script" type="text"></div>
-    <div class="modal-actions"><button class="btn-cancel" id="cancelSave">Cancel</button><button class="btn-save" id="confirmSave">Save</button></div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="accountModal">
   <div class="modal">
-    <div class="modal-title">Account</div>
-    <div class="modal-sub" id="accountMsg">You are in anonymous mode (100 uses).</div>
-    <div class="modal-field"><div class="modal-label">USERNAME</div><input class="modal-input" id="accountUser" placeholder="Enter username..." type="text"></div>
-    <div class="modal-field"><div class="modal-label">PASSWORD</div><input class="modal-input" id="accountPass" placeholder="Enter password..." type="password"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" id="cancelAccount">Cancel</button>
-      <button class="btn-cancel" id="logoutAccount">Logout</button>
-      <button class="btn-save" id="loginAccount">Login</button>
-      <button class="btn-save" id="registerAccount" style="background:var(--accent2);">Register</button>
+    <div class="modal-title">Welcome to LuaShield</div>
+    <div class="modal-sub" id="accountMsg">Sign in or create an account to unlock more features.</div>
+    
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border);">
+      <button class="auth-tab active" data-tab="login" style="flex:1;padding:10px;background:none;border:none;color:var(--text);font-weight:700;cursor:pointer;border-bottom:2px solid var(--accent);margin-bottom:-2px;font-family:var(--sans);">Sign In</button>
+      <button class="auth-tab" data-tab="register" style="flex:1;padding:10px;background:none;border:none;color:var(--muted2);font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:var(--sans);">Register</button>
     </div>
+    
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="modal-field"><div class="modal-label">USERNAME</div><input class="modal-input" id="accountUser" placeholder="Enter username..." type="text"></div>
+      <div class="modal-field"><div class="modal-label">PASSWORD</div><input class="modal-input" id="accountPass" placeholder="Enter password..." type="password"></div>
+      <button class="btn-save" id="loginAccount" style="width:100%;padding:10px;">Sign In</button>
+    </div>
+    
+    <!-- Register Form -->
+    <div id="registerForm" style="display:none;">
+      <div class="modal-field"><div class="modal-label">USERNAME</div><input class="modal-input" id="regUser" placeholder="Choose username..." type="text"></div>
+      <div class="modal-field"><div class="modal-label">PASSWORD</div><input class="modal-input" id="regPass" placeholder="Min 4 characters..." type="password"></div>
+      <div class="modal-field"><div class="modal-label">CONFIRM PASSWORD</div><input class="modal-input" id="regPass2" placeholder="Repeat password..." type="password"></div>
+      <button class="btn-save" id="registerAccount" style="width:100%;padding:10px;background:var(--accent2);">Create Account</button>
+    </div>
+    
+    <button class="btn-cancel" id="cancelAccount" style="width:100%;margin-top:8px;">Cancel</button>
+    <button class="btn-cancel" id="logoutAccount" style="width:100%;margin-top:4px;color:var(--red);">Logout</button>
   </div>
 </div>
 
@@ -534,6 +570,19 @@ $('hamburger').addEventListener('click', () => { sidebar.classList.toggle('open'
 overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
 function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
 
+// ── ACCOUNT MODAL TABS ──
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => { t.classList.remove('active'); t.style.borderBottomColor = 'transparent'; t.style.color = 'var(--muted2)'; });
+    tab.classList.add('active');
+    tab.style.borderBottomColor = 'var(--accent)';
+    tab.style.color = 'var(--text)';
+    const target = tab.dataset.tab;
+    $('loginForm').style.display = target === 'login' ? 'block' : 'none';
+    $('registerForm').style.display = target === 'register' ? 'block' : 'none';
+  });
+});
+
 // ── ACCOUNT ──
 let accounts = {};
 try { accounts = JSON.parse(localStorage.getItem('ls_accounts') || '{}'); } catch(e) {}
@@ -550,26 +599,74 @@ function getLimit() { return currentUser ? LIMITS.registered : LIMITS.anonymous;
 function updateAccountUI() {
   const u = getUsage(), l = getLimit();
   $('userName').textContent = currentUser || 'Anonymous';
-  $('userPlan').textContent = (currentUser ? 'PREMIUM' : 'FREE') + ' (' + u + '/' + l + ')';
+  $('userPlan').textContent = currentUser ? 'FREE USER (' + u + '/' + l + ')' : 'FREE USER (' + u + '/' + l + ')';
   $('userAvatar').textContent = userPfp;
   $('profileName').textContent = currentUser || 'Anonymous';
-  $('profilePlan').textContent = (currentUser ? 'PREMIUM' : 'FREE') + ' PLAN';
+  $('profilePlan').textContent = currentUser ? 'FREE USER · PREMIUM COMING SOON' : 'FREE USER · PREMIUM COMING SOON';
   $('profileUsage').textContent = u + ' / ' + l + ' uses';
   $('profileAvatarText').textContent = userPfp;
-  $('profileUsername').value = currentUser || '';
+  const pu = $('profileUsername');
+  if (pu) pu.value = currentUser || '';
   $('usesToday').textContent = u;
   $('usesTotal').textContent = u;
   $('usesLimit').textContent = l;
 }
 updateAccountUI();
 
+// ── ACCOUNT MODAL TABS ──
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => { t.classList.remove('active'); t.style.borderBottomColor = 'transparent'; t.style.color = 'var(--muted2)'; });
+    tab.classList.add('active');
+    tab.style.borderBottomColor = 'var(--accent)';
+    tab.style.color = 'var(--text)';
+    const target = tab.dataset.tab;
+    $('loginForm').style.display = target === 'login' ? 'block' : 'none';
+    $('registerForm').style.display = target === 'register' ? 'block' : 'none';
+  });
+});
+
 $('accountBtn').addEventListener('click', () => {
   $('accountUser').value = currentUser || '';
   $('accountPass').value = '';
-  $('accountMsg').textContent = currentUser ? 'Logged in as ' + currentUser + ' (' + getLimit() + ' uses).' : 'Anonymous mode (100 uses). Register for 1000 uses.';
+  $('regUser').value = '';
+  $('regPass').value = '';
+  $('regPass2').value = '';
+  $('accountMsg').textContent = currentUser ? 'Welcome back, ' + currentUser : 'Sign in or create an account.';
+  $('loginForm').style.display = 'block';
+  $('registerForm').style.display = 'none';
+  document.querySelector('.auth-tab[data-tab="login"]').click();
   $('accountModal').classList.add('open');
 });
-$('cancelAccount').addEventListener('click', () => $('accountModal').classList.remove('open'));
+
+$('loginAccount').addEventListener('click', () => {
+  const u = $('accountUser').value.trim(), p = $('accountPass').value;
+  if (!u || !p) return toast('Fill all fields', 'error');
+  if (!accounts[u] || accounts[u].pass !== hashPass(p)) return toast('Invalid credentials', 'error');
+  currentUser = u; localStorage.setItem('ls_user', u);
+  userPfp = localStorage.getItem('ls_pfp_' + u) || u.charAt(0).toUpperCase();
+  updateAccountUI(); $('accountModal').classList.remove('open');
+  toast('Welcome, ' + u + '!', 'success');
+});
+
+$('registerAccount').addEventListener('click', () => {
+  const u = $('regUser').value.trim(), p = $('regPass').value, p2 = $('regPass2').value;
+  if (!u || !p) return toast('Fill all fields', 'error');
+  if (p.length < 4) return toast('Password must be 4+ chars', 'error');
+  if (p !== p2) return toast('Passwords do not match', 'error');
+  if (accounts[u]) return toast('Username already taken', 'error');
+  accounts[u] = { pass: hashPass(p), created: Date.now() };
+  localStorage.setItem('ls_accounts', JSON.stringify(accounts));
+  currentUser = u; localStorage.setItem('ls_user', u);
+  userPfp = u.charAt(0).toUpperCase(); localStorage.setItem('ls_pfp_' + u, userPfp);
+  updateAccountUI(); $('accountModal').classList.remove('open');
+  toast('Account created! Welcome, ' + u + '!', 'success');
+});
+
+$('cancelAccount').addEventListener('click', () => {
+  $('accountModal').classList.remove('open');
+});
+
 $('logoutAccount').addEventListener('click', () => {
   currentUser = null;
   localStorage.removeItem('ls_user');
@@ -578,36 +675,16 @@ $('logoutAccount').addEventListener('click', () => {
   $('accountModal').classList.remove('open');
   toast('Logged out', 'success');
 });
-$('loginAccount').addEventListener('click', () => {
-  const u = $('accountUser').value.trim(), p = $('accountPass').value;
-  if (!u || !p) return toast('Fill all fields', 'error');
-  if (!accounts[u] || accounts[u].pass !== hashPass(p)) return toast('Invalid credentials', 'error');
-  currentUser = u;
-  localStorage.setItem('ls_user', u);
-  userPfp = localStorage.getItem('ls_pfp_' + u) || u.charAt(0).toUpperCase();
-  updateAccountUI();
-  $('accountModal').classList.remove('open');
-  toast('Welcome, ' + u + '!', 'success');
-});
-$('registerAccount').addEventListener('click', () => {
-  const u = $('accountUser').value.trim(), p = $('accountPass').value;
-  if (!u || !p) return toast('Fill all fields', 'error');
-  if (p.length < 4) return toast('Password must be 4+ chars', 'error');
-  if (accounts[u]) return toast('Username taken', 'error');
-  accounts[u] = { pass: hashPass(p), created: Date.now() };
-  localStorage.setItem('ls_accounts', JSON.stringify(accounts));
-  currentUser = u;
-  localStorage.setItem('ls_user', u);
-  userPfp = u.charAt(0).toUpperCase();
-  localStorage.setItem('ls_pfp_' + u, userPfp);
-  updateAccountUI();
-  $('accountModal').classList.remove('open');
-  toast('Account created!', 'success');
-});
 
 $('saveProfile').addEventListener('click', () => {
   const newUser = $('profileUsername').value.trim();
-  const newPass = $('profilePassword').value;
+  const currentPass = $('profilePassword').value;
+  const newPass = $('profileNewPass').value;
+  
+  if (newPass && !currentPass) return toast('Enter current password to change it', 'error');
+  if (newPass && currentPass && accounts[currentUser] && accounts[currentUser].pass !== hashPass(currentPass)) 
+    return toast('Current password is incorrect', 'error');
+  
   if (newUser && newUser !== currentUser && accounts[newUser]) return toast('Username taken', 'error');
   if (newUser && newUser !== currentUser && currentUser) {
     accounts[newUser] = accounts[currentUser];
@@ -621,28 +698,9 @@ $('saveProfile').addEventListener('click', () => {
     localStorage.setItem('ls_accounts', JSON.stringify(accounts));
   }
   updateAccountUI();
+  $('profilePassword').value = '';
+  $('profileNewPass').value = '';
   toast('Profile updated!', 'success');
-});
-
-// PFP
-function renderPfp() {
-  $('pfpGrid').innerHTML = PFP_OPTIONS.map(p =>
-    `<div class="pfp-option${p===userPfp?' selected':''}" data-p="${p}">${p}</div>`
-  ).join('');
-  $('pfpGrid').querySelectorAll('.pfp-option').forEach(el => {
-    el.addEventListener('click', () => {
-      userPfp = el.dataset.p;
-      $('pfpGrid').querySelectorAll('.pfp-option').forEach(e => e.classList.remove('selected'));
-      el.classList.add('selected');
-    });
-  });
-}
-renderPfp();
-$('confirmPfp').addEventListener('click', () => {
-  if (currentUser) localStorage.setItem('ls_pfp_' + currentUser, userPfp);
-  updateAccountUI();
-  $('pfpModal').classList.remove('open');
-  toast('Avatar updated!', 'success');
 });
 
 function canObfuscate() { if (getUsage() >= getLimit()) { toast('Limit reached! Register or upgrade.', 'error'); return false; } return true; }
