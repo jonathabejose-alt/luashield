@@ -397,7 +397,10 @@ textarea.code-input::placeholder { color: var(--muted); }
         <div class="stat-card yellow"><div class="stat-label">AVERAGE LEVEL</div><div class="stat-value" id="avgLevel">—</div><div class="stat-sub">Security</div></div>
       </div>
       <div class="section-pad" style="padding-bottom:24px;">
-        <div style="font-size:14px;font-weight:700;margin-bottom:14px;">Recent History</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+  <span style="font-size:14px;font-weight:700;">Recent History</span>
+  <button class="icon-btn" onclick="window._histClear()" style="color:var(--red);">Clear All</button>
+</div>
         <div class="scripts-table"><table>
           <thead><tr><th>Name</th><th>Type</th><th>Level</th><th>Date</th><th>Action</th></tr></thead>
           <tbody id="historyTable"><tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;padding:30px;">No history yet</td></tr></tbody>
@@ -854,7 +857,7 @@ $('obfuscateBtn').addEventListener('click', async () => {
     $('outputLines').textContent = output.split('\n').length + ' lines';
     totalObf++;
     localStorage.setItem('ls_totalObf', totalObf);
-    obfHistory.unshift({ name: 'script_' + Date.now().toString(36), type: '.lua', level, date: new Date().toLocaleDateString('en-US') });
+    obfHistory.unshift({ name: 'script_' + Date.now().toString(36), type: '.lua', level, date: new Date().toLocaleDateString('en-US'), code: code });
     if (obfHistory.length > 50) obfHistory.length = 50;
     localStorage.setItem('ls_history', JSON.stringify(obfHistory));
     incrementUsage();
@@ -892,15 +895,28 @@ function renderSaved() {
     </div>`).join('');
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-window._load = (i) => { const s = savedScripts[i]; codeInput.value = s.code; updateLines(); if (s.output) { currentOutput = s.output; $('outputPlaceholder').style.display = 'none'; $('outputCode').style.display = 'block'; $('outputCode').textContent = s.output; $('outputLines').textContent = s.output.split('\n').length + ' lines'; } document.querySelector('[data-page="obfuscator"]').click(); toast('Loaded: ' + s.name, 'success'); };
-window._export = (i) => { const s = savedScripts[i]; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s.output||s.code])); a.download = s.name.replace(/\s+/g,'_') + '.lua'; a.click(); };
-window._del = (i) => { savedScripts.splice(i,1); localStorage.setItem('ls_scripts', JSON.stringify(savedScripts)); $('savedCount').textContent = savedScripts.length; renderSaved(); toast('Deleted', 'error'); };
+window._load = function(i) { const s = savedScripts[i]; if (!s) return; codeInput.value = s.code; updateLines(); if (s.output) { currentOutput = s.output; $('outputPlaceholder').style.display = 'none'; $('outputCode').style.display = 'block'; $('outputCode').textContent = s.output; $('outputLines').textContent = s.output.split('\n').length + ' lines'; } document.querySelector('[data-page="obfuscator"]').click(); toast('Loaded: ' + s.name, 'success'); };
+window._export = function(i) { const s = savedScripts[i]; if (!s) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s.output||s.code])); a.download = s.name.replace(/\s+/g,'_') + '.lua'; a.click(); };
+window._del = function(i) { savedScripts.splice(i,1); localStorage.setItem('ls_scripts', JSON.stringify(savedScripts)); $('savedCount').textContent = savedScripts.length; renderSaved(); toast('Deleted', 'error'); };
 
 function refreshDashboard() {
-  $('totalObf').textContent = totalObf; $('totalSaved').textContent = savedScripts.length; $('totalUrls').textContent = protectedUrls.length;
+  $('totalObf').textContent = totalObf;
+  $('totalSaved').textContent = savedScripts.length;
+  $('totalUrls').textContent = protectedUrls.length;
   if (obfHistory.length) $('avgLevel').textContent = Math.round(obfHistory.reduce((a,b) => a + b.level, 0) / obfHistory.length * 10) / 10;
-  $('historyTable').innerHTML = obfHistory.length ? obfHistory.slice(0,10).map(h => `<tr><td style="font-family:var(--mono);">${esc(h.name)}</td><td><span style="font-size:10px;color:var(--accent);">${h.type}</span></td><td>Level ${h.level}</td><td>${h.date}</td><td><button class="icon-btn">Load</button></td></tr>`).join('') : '<tr><td colspan="5">No history yet</td></tr>';
+  $('historyTable').innerHTML = obfHistory.length ? obfHistory.slice(0,10).map((h, idx) => `
+    <tr>
+      <td style="font-family:var(--mono);">${esc(h.name)}</td>
+      <td><span style="font-size:10px;color:var(--accent);">${h.type}</span></td>
+      <td>Level ${h.level}</td>
+      <td>${h.date}</td>
+      <td>
+  <button class="icon-btn" onclick="window._hist(${idx})">Load</button>
+  <button class="icon-btn" onclick="window._histDel(${idx})" style="color:var(--red);">X</button>
+</td>
+    </tr>`).join('') : '<tr><td colspan="5">No history yet</td></tr>';
 }
+
 
 $('generateUrl').addEventListener('click', () => { const s = $('urlSlug').value.trim(); if (!s) return toast('Enter a slug', 'error'); const u = { slug: s, token: Math.random().toString(36).slice(2), views: 0, created: new Date().toLocaleDateString('en-US') }; protectedUrls.unshift(u); localStorage.setItem('ls_urls', JSON.stringify(protectedUrls)); $('urlSlug').value = ''; renderProtected(); toast('URL protected!', 'success'); });
 function renderProtected() { $('protectedList').innerHTML = protectedUrls.length ? protectedUrls.map((u,i) => `<div class="protected-item"><div class="pi-dot"></div>luashield.io/<strong>${esc(u.slug)}</strong><br><span>token: ${u.token}</span><div class="pi-actions"><button class="icon-btn" onclick="window._curl(${i})">Copy</button><button class="icon-btn" onclick="window._durl(${i})" style="color:var(--red)">Delete</button></div></div>`).join('') : '<div class="empty-state"><p>No protected URLs yet.</p></div>'; }
@@ -923,5 +939,65 @@ $('statusText').textContent = 'Ready - Bills Engine';
 
 }); // end DOMContentLoaded
 </script>
+
+<script>
+window._load = function(i) {
+  const scripts = JSON.parse(localStorage.getItem('ls_scripts') || '[]');
+  const s = scripts[i];
+  if (!s) return;
+  document.getElementById('codeInput').value = s.code;
+  document.getElementById('codeInput').dispatchEvent(new Event('input'));
+  if (s.output) {
+    document.getElementById('outputPlaceholder').style.display = 'none';
+    document.getElementById('outputCode').style.display = 'block';
+    document.getElementById('outputCode').textContent = s.output;
+  }
+  document.querySelector('[data-page="obfuscator"]').click();
+};
+
+window._export = function(i) {
+  const scripts = JSON.parse(localStorage.getItem('ls_scripts') || '[]');
+  const s = scripts[i];
+  if (!s) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([s.output || s.code]));
+  a.download = (s.name || 'script').replace(/\s+/g,'_') + '.lua';
+  a.click();
+};
+
+window._del = function(i) {
+  let scripts = JSON.parse(localStorage.getItem('ls_scripts') || '[]');
+  scripts.splice(i, 1);
+  localStorage.setItem('ls_scripts', JSON.stringify(scripts));
+  location.reload();
+};
+
+window._hist = function(i) {
+  const history = JSON.parse(localStorage.getItem('ls_history') || '[]');
+  const h = history[i];
+  if (!h) return;
+  if (h.code) {
+    document.getElementById('codeInput').value = h.code;
+    document.getElementById('codeInput').dispatchEvent(new Event('input'));
+  }
+  document.querySelector('[data-page="obfuscator"]').click();
+};
+
+// Delete one history entry
+window._histDel = function(i) {
+  let history = JSON.parse(localStorage.getItem('ls_history') || '[]');
+  history.splice(i, 1);
+  localStorage.setItem('ls_history', JSON.stringify(history));
+  location.reload();
+};
+
+// Clear all history
+window._histClear = function() {
+  localStorage.removeItem('ls_history');
+  location.reload();
+};
+
+</script>
+
 </body>
 </html>
